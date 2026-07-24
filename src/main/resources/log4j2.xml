@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO" monitorInterval="5">
+    <Properties>
+        <Property name="LOG_PATH">/home/techrise/service/logs</Property>
+        <Property name="LOG_PATTERN">%d{dd MMM yyyy HH:mm:ss,SSS} %X{CorrelationId} %p %t %c - %m%n</Property>
+        <Property name="MONITORING_LOG_PATTERN">%m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console for debugging -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <!-- Authorization Logger -->
+        <RollingFile name="AUTHORIZATION_LOGGER">
+            <FileName>${LOG_PATH}/authorization_logger.log</FileName>
+            <FilePattern>${LOG_PATH}/authorization_logger.log_%d{yyyyMMdd_HHmmss}</FilePattern>
+            <PatternLayout pattern="${LOG_PATTERN}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB" />
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <!-- New async loggers -->
+        <Logger name="AUTHORIZATION_LOGGER" additivity="false" level="INFO">
+            <AppenderRef ref="AUTHORIZATION_LOGGER" />
+        </Logger>
+
+        <!-- Root Logger -->
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>

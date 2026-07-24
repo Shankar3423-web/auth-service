@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/authorization
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000
+      repositories:
+        enabled: false
+
+  cache:
+    type: none
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  threads:
+    virtual:
+      enabled: true
+
+rsa:
+  private-key: classpath:keys/private.pem
+  public-key: classpath:keys/public.pem
+
+server:
+  servlet:
+    context-path: /oauth-service
+
