@@ -19,13 +19,14 @@ public class ResourceController {
     @PostMapping("/resource-access-check")
     public ResponseEntity<AuthResponse> checkAccess(@RequestBody @Valid CheckAcessRequest checkAcessRequest) {
 
-        boolean allowed = resourceService.checkAccess(checkAcessRequest.getAccessTokenUUID(), checkAcessRequest.getService(), checkAcessRequest.getPath());
+        String clientId = resourceService.checkAccess(checkAcessRequest.getAccessTokenUUID(), checkAcessRequest.getService(), checkAcessRequest.getPath());
 
-        if (allowed) {
+        if (clientId != null) {
             return ResponseEntity.ok(AuthResponse.builder()
                             .success(true)
                             .code("ACCESS_GRANTED")
                             .message("Client has access")
+                            .clientId(clientId)
                             .build()
             );
         }

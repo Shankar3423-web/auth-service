@@ -15,4 +15,5 @@ public class AuthResponse {
     private String code;          // ("TOKEN_VALID", "ACCESS_DENIED")
     private String message;       // Human-readable explanation
     private String tokenStatus;   // "VALID", "INVALID", "EXPIRED"  (optional)
+    private String clientId;
 }

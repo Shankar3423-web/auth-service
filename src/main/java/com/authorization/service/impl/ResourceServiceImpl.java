@@ -47,11 +47,11 @@ public class ResourceServiceImpl implements ResourceService {
 
 
     @Override
-    public boolean checkAccess(String accessTokenUUID, String resourceService,String resourcePath) {
+    public String checkAccess(String accessTokenUUID, String resourceService,String resourcePath) {
         Loggers.AUTHORIZATION_LOGGER.info("reached to service layer with UUID {} - path {} ",accessTokenUUID,resourcePath);
         try {
             AuthSessionDTO session = tokenService.getActiveAuthSession(accessTokenUUID);
-            if (session == null) return false;
+            if (session == null) return null;
 
             String clientId = session.getClientId();
 
@@ -59,21 +59,22 @@ public class ResourceServiceImpl implements ResourceService {
 
             Loggers.AUTHORIZATION_LOGGER.info("The fetched client form Db is {}" , clientRoleIds);
 
-            if (clientRoleIds == null ) return false;
+            if (clientRoleIds == null ) return null;
 
             Set<Long> resourceRoleIds = resourceRolesRepository.findActiveRoleIdsByResourceServiceAndResourcePath(resourceService,resourcePath);
-            if (resourceRoleIds == null) return false;
+            if (resourceRoleIds == null) return null;
 
 
             Loggers.AUTHORIZATION_LOGGER.info("the fetched the clientRoleIds {} resourceRoleIds is {} ", clientRoleIds,resourceRoleIds);
 
 
-            return clientRoleIds.stream().anyMatch(resourceRoleIds::contains);
+            boolean allowed = clientRoleIds.stream().anyMatch(resourceRoleIds::contains);
+            return allowed ? clientId : null;
 
         } catch (Exception ex) {
 
             Loggers.AUTHORIZATION_LOGGER.error("Error checking access: {}", ex.getMessage(), ex);
-            return false;
+            return null;
         }
     }
 
